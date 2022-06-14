@@ -4,6 +4,7 @@ import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import Logo from "../../assets/svg/logo.svg";
 import SearchBar from "../smallerComps/SearchBar";
 import Profile from "../smallerComps/Profile";
+import Image from "next/image";
 
 const Header = () => {
   return (
@@ -19,8 +20,7 @@ const Header = () => {
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-        {/*  eslint-disable-next-line @next/next/no-img-element */}
-        <img src={Logo} alt="Logo" />
+        <Image src={Logo} width={50} height={50} alt="logo" />
         <Box
           sx={{
             display: "flex",

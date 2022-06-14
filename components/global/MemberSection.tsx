@@ -23,21 +23,21 @@ const MemberSection = () => {
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: "2em" }}>
           <ChangeVisibility />
-          <Stack direction="row" spacing={2}>
+          <Stack sx={{ alignItems: "center" }} direction="row" spacing={2}>
             <Avatar
               sx={{ borderRadius: "8px" }}
               alt="Remy Sharp"
-              src="/static/images/avatar/1.jpg"
+              src="https://i.pravatar.cc/150?img=3"
             />
             <Avatar
               sx={{ borderRadius: "8px" }}
               alt="Travis Howard"
-              src="/static/images/avatar/2.jpg"
+              src="https://i.pravatar.cc/150?img=2"
             />
             <Avatar
               sx={{ borderRadius: "8px" }}
               alt="Cindy Baker"
-              src="/static/images/avatar/3.jpg"
+              src="https://i.pravatar.cc/150?img=1"
             />
             <AddNewMember />
           </Stack>

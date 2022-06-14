@@ -7,6 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import PublicIcon from "@mui/icons-material/Public";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import LockIcon from "@mui/icons-material/Lock";
 
 import Typography from "@mui/material/Typography";
@@ -32,16 +33,19 @@ export default function AddNewMember() {
 
   return (
     <div>
-      <Button
+      <AddBoxIcon
         sx={{
-          borderRadius: "8px",
-          fontWeight: "500",
+          width: "2em",
+          height: "2em",
+          marginTop: "5px",
+          "&:hover": {
+            opacity: "0.8",
+            cursor: "pointer",
+          },
         }}
-        variant="contained"
+        color="primary"
         onClick={handleClickOpen}
-      >
-        +
-      </Button>
+      />
       <Dialog
         sx={{
           border: "1px solid #E0E0E0",

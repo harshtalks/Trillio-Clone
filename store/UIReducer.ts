@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 interface InitialState {
   signingOut: boolean;
   sideMenu: boolean;
+  addNewBoardCard: boolean;
 }
 
 const initialState = {
@@ -23,10 +24,17 @@ const uiSlice = createSlice({
     toggleSideMenu(state) {
       state.sideMenu = !state.sideMenu;
     },
+    toggleAddNewBoardCard(state) {
+      state.addNewBoardCard = !state.addNewBoardCard;
+    },
   },
 });
 
-export const { hideSignoutFeedback, showSignoutFeedback, toggleSideMenu } =
-  uiSlice.actions;
+export const {
+  hideSignoutFeedback,
+  showSignoutFeedback,
+  toggleSideMenu,
+  toggleAddNewBoardCard,
+} = uiSlice.actions;
 
 export default uiSlice.reducer;
