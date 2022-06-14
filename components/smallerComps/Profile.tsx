@@ -4,11 +4,19 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { Avatar } from "@mui/material";
+import { Avatar, CircularProgress } from "@mui/material";
+import { signOut, useSession } from "next-auth/react";
+import { useAppDispatch } from "../../hooks/redux";
+import {
+  hideSignoutFeedback,
+  showSignoutFeedback,
+} from "../../store/UIReducer";
 
 export default function Profile() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const { data: session, status } = useSession();
+  const dispatch = useAppDispatch();
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -16,7 +24,9 @@ export default function Profile() {
     setAnchorEl(null);
   };
 
-  return (
+  return status === "loading" ? (
+    <CircularProgress />
+  ) : session?.user ? (
     <div>
       <Button
         id="demo-positioned-button"
@@ -36,9 +46,9 @@ export default function Profile() {
             height: "32px",
           }}
           alt="Remy Sharp"
-          src="/static/images/avatar/1.jpg"
+          src={session?.user.image}
         />
-        Harsh Pareek
+        {session?.user.name}
       </Button>
       <Menu
         id="demo-positioned-menu"
@@ -57,8 +67,16 @@ export default function Profile() {
       >
         <MenuItem onClick={handleClose}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            dispatch(showSignoutFeedback());
+            signOut({ callbackUrl: `${window.location.origin}/login` });
+          }}
+        >
+          Logout
+        </MenuItem>
       </Menu>
     </div>
-  );
+  ) : null;
 }

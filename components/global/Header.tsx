@@ -1,7 +1,7 @@
 import { Box, Button, Chip, Input, Typography } from "@mui/material";
 import React from "react";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-import Logo from "../../assets/svg/Logo-small.svg";
+import Logo from "../../assets/svg/logo.svg";
 import SearchBar from "../smallerComps/SearchBar";
 import Profile from "../smallerComps/Profile";
 

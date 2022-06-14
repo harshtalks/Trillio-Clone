@@ -1,13 +1,18 @@
 import { Box } from "@mui/material";
 import React from "react";
+import { useSelector } from "react-redux";
+import LogoutFeedBack from "../components/feedback/LogoutFeedBack";
 import Header from "../components/global/Header";
 import MemberSection from "../components/global/MemberSection";
+import { useAppSelector } from "../hooks/redux";
 
 type layout = {
   children: React.ReactNode;
 };
 
 const Layout = ({ children }: layout) => {
+  const logoutFeedback = useAppSelector((state) => state.ui.signingOut);
+  const signinOut = useAppSelector((state) => state.ui);
   return (
     <Box
       sx={{
@@ -17,6 +22,7 @@ const Layout = ({ children }: layout) => {
     >
       <Header />
       <MemberSection />
+      {logoutFeedback && <LogoutFeedBack />}
       <Box
         sx={{
           background: "#E5E7E6",
@@ -24,8 +30,8 @@ const Layout = ({ children }: layout) => {
           borderTopRightRadius: "12px",
           margin: "1em",
           padding: "1em",
-          height: "100vh",
-          overflow: "auto",
+          minHeight: "70vh",
+          overflowX: "auto",
         }}
       >
         {children}

@@ -4,18 +4,26 @@ import { CacheProvider } from "@emotion/react";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { defaultTheme } from "../theme/defaultTheme";
 import createEmotionCache from "../utility/emotionCache";
+import NextNProgress from "nextjs-progressbar";
+import { SessionProvider } from "next-auth/react";
+import { Provider } from "react-redux";
+import { store } from "../store/store";
 
 const clientSideEmotionCache = createEmotionCache();
 
-function MyApp(props: any) {
-  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <CacheProvider value={clientSideEmotionCache}>
-      <ThemeProvider theme={defaultTheme}>
-        <CssBaseline />
-        <Component {...pageProps} />
-      </ThemeProvider>
-    </CacheProvider>
+    <SessionProvider session={pageProps.session}>
+      <CacheProvider value={clientSideEmotionCache}>
+        <ThemeProvider theme={defaultTheme}>
+          <CssBaseline />
+          <NextNProgress />
+          <Provider store={store}>
+            <Component {...pageProps} />
+          </Provider>
+        </ThemeProvider>
+      </CacheProvider>
+    </SessionProvider>
   );
 }
 
