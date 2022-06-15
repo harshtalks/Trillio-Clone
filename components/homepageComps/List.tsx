@@ -4,6 +4,7 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 
 import React from "react";
 import Card from "./Card";
+import { motion } from "framer-motion";
 
 const List = ({ show }: { show: boolean }) => {
   return (
@@ -22,7 +23,9 @@ const List = ({ show }: { show: boolean }) => {
             <Typography fontWeight={500} variant="body1">
               Backlog
             </Typography>
-            <MenuIcon sx={{ color: "#828282" }} />
+            <motion.div whileHover={{ opacity: 0.8, cursor: "pointer" }}>
+              <MenuIcon sx={{ color: "#828282" }} />
+            </motion.div>
           </Box>
           <Box>
             <Card />

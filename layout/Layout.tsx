@@ -25,7 +25,7 @@ const Layout = ({ children }: layout) => {
       {logoutFeedback && <LogoutFeedBack />}
       <Box
         sx={{
-          background: "#E5E7E6",
+          background: "#f8f9fa",
           borderTopLeftRadius: "12px",
           borderTopRightRadius: "12px",
           margin: "1em",

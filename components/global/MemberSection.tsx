@@ -6,8 +6,13 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Menu from "../sidebars/Menu";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { toggleSideMenu } from "../../store/UIReducer";
+import { motion } from "framer-motion";
 
 const MemberSection = () => {
+  const variants = {
+    open: { opacity: 1 },
+    closed: { opacity: 0 },
+  };
   const sideMenu = useAppSelector((state) => state.ui.sideMenu);
   const dispatch = useAppDispatch();
   return (
@@ -56,7 +61,15 @@ const MemberSection = () => {
           onClick={() => dispatch(toggleSideMenu())}
         />
       </Box>
-      {sideMenu ? <Menu /> : null}
+      {sideMenu ? (
+        <motion.div
+          transition={{ duration: 0.5 }}
+          animate={sideMenu ? "open" : "closed"}
+          variants={variants}
+        >
+          <Menu />
+        </motion.div>
+      ) : null}
     </>
   );
 };

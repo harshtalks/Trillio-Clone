@@ -5,8 +5,10 @@ import Logo from "../../assets/svg/logo.svg";
 import SearchBar from "../smallerComps/SearchBar";
 import Profile from "../smallerComps/Profile";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 const Header = () => {
+  const router = useRouter();
   return (
     <Box
       sx={{
@@ -39,6 +41,9 @@ const Header = () => {
               color: "#828282",
               fontSize: "12px",
               fontWeight: "500",
+            }}
+            onClick={() => {
+              router.push("/boards");
             }}
             icon={
               <DragIndicatorIcon

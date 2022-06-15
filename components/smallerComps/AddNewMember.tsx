@@ -14,6 +14,8 @@ import Typography from "@mui/material/Typography";
 import { Avatar, Box, Chip } from "@mui/material";
 import SearchBar from "./SearchBar";
 import UserSearch from "./UserSearch";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { toggleAddNewMember } from "../../store/UIReducer";
 
 export interface DialogTitleProps {
   id: string;
@@ -22,13 +24,14 @@ export interface DialogTitleProps {
 }
 
 export default function AddNewMember() {
-  const [open, setOpen] = React.useState(false);
+  const dispatch = useAppDispatch();
+  const openNewMeberModel = useAppSelector((state) => state.ui.addNewMember);
 
   const handleClickOpen = () => {
-    setOpen(true);
+    dispatch(toggleAddNewMember());
   };
   const handleClose = () => {
-    setOpen(false);
+    dispatch(toggleAddNewMember());
   };
 
   return (
@@ -38,6 +41,7 @@ export default function AddNewMember() {
           width: "2em",
           height: "2em",
           marginTop: "5px",
+          transition: "all 0.25s ease-in-out",
           "&:hover": {
             opacity: "0.8",
             cursor: "pointer",
@@ -51,7 +55,7 @@ export default function AddNewMember() {
           border: "1px solid #E0E0E0",
         }}
         hideBackdrop={true}
-        open={open}
+        open={openNewMeberModel}
         onClose={handleClose}
       >
         <Box

@@ -2,16 +2,22 @@ import { Chip, Divider, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Box } from "@mui/system";
 import React from "react";
+import { motion } from "framer-motion";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Avatar from "@mui/material/Avatar";
 import DescriptionIcon from "@mui/icons-material/Description";
 import EditIcon from "@mui/icons-material/Edit";
 import GroupsIcon from "@mui/icons-material/Groups";
-import { useAppDispatch } from "../../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { toggleSideMenu } from "../../store/UIReducer";
 
 const Menu = () => {
   const dispatch = useAppDispatch();
+  //
+  const open = useAppSelector((state) => state.ui.sideMenu);
+  //
+
+  //
   return (
     <Box
       sx={{

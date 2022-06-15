@@ -4,11 +4,19 @@ interface InitialState {
   signingOut: boolean;
   sideMenu: boolean;
   addNewBoardCard: boolean;
+  cardDetailsModel: boolean;
+  addNewMember: boolean;
+  coverModel: boolean;
+  labelModel: boolean;
 }
 
 const initialState = {
   signingOut: false,
   sideMenu: false,
+  cardDetailsModel: false,
+  addNewMember: false,
+  coverModel: false,
+  labelModel: false,
 } as InitialState;
 
 const uiSlice = createSlice({
@@ -27,6 +35,18 @@ const uiSlice = createSlice({
     toggleAddNewBoardCard(state) {
       state.addNewBoardCard = !state.addNewBoardCard;
     },
+    toggleCardDetailsModel(state) {
+      state.cardDetailsModel = !state.cardDetailsModel;
+    },
+    toggleAddNewMember(state) {
+      state.addNewMember = !state.addNewMember;
+    },
+    toggleCoverModel(state) {
+      state.coverModel = !state.coverModel;
+    },
+    toggleLabelModel(state) {
+      state.labelModel = !state.labelModel;
+    },
   },
 });
 
@@ -35,6 +55,10 @@ export const {
   showSignoutFeedback,
   toggleSideMenu,
   toggleAddNewBoardCard,
+  toggleCardDetailsModel,
+  toggleAddNewMember,
+  toggleCoverModel,
+  toggleLabelModel,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;
