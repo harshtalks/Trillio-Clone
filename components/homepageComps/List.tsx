@@ -2,11 +2,37 @@ import { Alert, Box, Button, Typography } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "./Card";
 import { motion } from "framer-motion";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import {
+  saveListId,
+  toggleListModel,
+  toggleNewCard,
+} from "../../store/UIReducer";
+import {
+  Card as CardProps,
+  Label,
+  List as ListProps,
+  Member,
+} from "@prisma/client";
 
-const List = ({ show }: { show: boolean }) => {
+type listprops = ListProps & {
+  card: Array<CardProps & { labels: Array<Label>; members: Member }>;
+};
+
+const List = ({
+  show,
+  listId,
+  list,
+}: {
+  show: boolean;
+  listId?: string;
+  list?: listprops;
+}) => {
+  const dispatch = useAppDispatch();
+
   return (
     <Box sx={{ width: "300px" }}>
       {show ? (
@@ -21,18 +47,28 @@ const List = ({ show }: { show: boolean }) => {
             }}
           >
             <Typography fontWeight={500} variant="body1">
-              Backlog
+              {list?.name}
             </Typography>
             <motion.div whileHover={{ opacity: 0.8, cursor: "pointer" }}>
               <MenuIcon sx={{ color: "#828282" }} />
             </motion.div>
           </Box>
           <Box>
-            <Card />
-            <Card />
+            {list &&
+              list.card &&
+              list.card.map((card: CardProps) => {
+                return <Card key={card.id} cardData={card} />;
+              })}
             <Alert
               action={
-                <AddRoundedIcon sx={{ cursor: "pointer" }} color="info" />
+                <Button
+                  onClick={() => {
+                    dispatch(saveListId(list?.id));
+                    dispatch(toggleNewCard(true));
+                  }}
+                >
+                  <AddRoundedIcon sx={{ cursor: "pointer" }} color="info" />
+                </Button>
               }
               severity="info"
             >
@@ -48,7 +84,9 @@ const List = ({ show }: { show: boolean }) => {
         >
           <Alert
             action={
-              <AddRoundedIcon sx={{ cursor: "pointer" }} color="warning" />
+              <Button onClick={() => dispatch(toggleListModel(true))}>
+                <AddRoundedIcon sx={{ cursor: "pointer" }} color="warning" />
+              </Button>
             }
             color="warning"
             severity="info"

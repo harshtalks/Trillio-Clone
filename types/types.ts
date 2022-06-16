@@ -18,7 +18,7 @@ type memberType = Array<Member & { user: User }>;
 
 export type BoardProps = Board & {
   lists: Array<
-    List & { cards: Array<Card & { labels: Array<Label>; members: Member }> }
+    List & { card: Array<Card & { labels: Array<Label>; members: Member }> }
   >;
   user: User;
   members: memberType;

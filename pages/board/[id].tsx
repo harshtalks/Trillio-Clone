@@ -1,19 +1,16 @@
-import { Alert, AlertTitle, Box, Grid, Typography } from "@mui/material";
+import { Alert, AlertTitle, Grid, Typography } from "@mui/material";
 import type { GetServerSideProps, NextPage } from "next";
-import { getSession, useSession } from "next-auth/react";
-import Head from "next/head";
-import Image from "next/image";
-import { useRouter } from "next/router";
+import { getSession } from "next-auth/react";
 import { useEffect } from "react";
-import List from "../../components/homepageComps/List";
 import Layout from "../../layout/Layout";
-import styles from "../../styles/Home.module.css";
 import Details from "../../components/Details";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import prisma from "../../prisma/prisma";
 import { BoardProps } from "../../types/types";
 import { storeBoard } from "../../store/boardScreenReducer";
-import { loadUsers } from "../../store/userReducers";
+import AddNewList from "../../components/addNewList/Index";
+import List from "../../components/homepageComps/List";
+import AddNewCard from "../../components/addNewCard";
 
 const Home: NextPage = (props: any) => {
   const boardData: BoardProps | null = props.boardData;
@@ -39,18 +36,21 @@ const Home: NextPage = (props: any) => {
       )}
 
       {boardData && (
-        <Grid container spacing={4}>
-          <Grid item>
-            <List show={true} />
-          </Grid>
-          <Grid item>
-            <List show={true} />
-          </Grid>
+        <Grid sx={{ flexWrap: "nowrap" }} container spacing={4}>
+          {boardData.lists.map((list) => {
+            return (
+              <Grid key={list.id} item>
+                <List show={true} listId={list.id} list={list} />
+              </Grid>
+            );
+          })}
           <Grid item>
             <List show={false} />
           </Grid>
         </Grid>
       )}
+      <AddNewList />
+      <AddNewCard />
       {detailsCardModel && <Details />}
     </Layout>
   );

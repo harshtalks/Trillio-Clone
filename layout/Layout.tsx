@@ -20,6 +20,7 @@ const Layout = ({ children }: layout) => {
       sx={{
         width: "100%",
         height: "100%",
+        overflowX: "hidden",
       }}
     >
       <Header isBoardPage={true} />

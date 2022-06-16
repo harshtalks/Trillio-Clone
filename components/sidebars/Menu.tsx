@@ -23,6 +23,7 @@ const Menu = () => {
       sx={{
         width: "500px",
         height: "90vh",
+        zIndex: "100000",
         position: "fixed",
         bottom: "0",
         right: "10px",

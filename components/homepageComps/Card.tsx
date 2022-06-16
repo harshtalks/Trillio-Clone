@@ -10,8 +10,10 @@ import {
   toggleAddNewMember,
   toggleCardDetailsModel,
 } from "../../store/UIReducer";
+import { Card } from "@prisma/client";
+import Image from "next/image";
 
-const Card = () => {
+const Card = ({ cardData }: { cardData: Card }) => {
   const dispatch = useAppDispatch();
   return (
     <motion.div whileHover={{ cursor: "pointer", scale: 1.01 }}>
@@ -26,6 +28,26 @@ const Card = () => {
           marginBottom: "1.5em",
         }}
       >
+        {cardData.image && (
+          <Box
+            sx={{
+              width: "100%",
+              height: "150px",
+              position: "relative",
+              margin: "0 auto",
+              marginBottom: "10px",
+            }}
+          >
+            <Image
+              style={{ borderRadius: "12px" }}
+              src={cardData.image}
+              alt="img"
+              layout="fill"
+              objectFit="cover"
+              priority={true}
+            />
+          </Box>
+        )}
         <Typography
           onClick={() => {
             dispatch(toggleCardDetailsModel());
@@ -33,7 +55,7 @@ const Card = () => {
           gutterBottom
           variant="h6"
         >
-          Add whatever you want to add
+          {cardData.name}
         </Typography>
         <Stack direction={"row"} gap={2}>
           <Chip variant="outlined" label="concept" color="success" />

@@ -8,7 +8,9 @@ interface InitialState {
   addNewMember: boolean;
   coverModel: boolean;
   labelModel: boolean;
-  userId: string;
+  listId: string;
+  addNewCard: boolean;
+  addNewList: boolean;
 }
 
 const initialState = {
@@ -19,6 +21,8 @@ const initialState = {
   addNewMember: false,
   coverModel: false,
   labelModel: false,
+  addNewCard: false,
+  addNewList: false,
 } as InitialState;
 
 const uiSlice = createSlice({
@@ -49,8 +53,14 @@ const uiSlice = createSlice({
     toggleLabelModel(state) {
       state.labelModel = !state.labelModel;
     },
-    saveUserId(state, action) {
-      state.userId = action.payload;
+    saveListId(state, action) {
+      state.listId = action.payload;
+    },
+    toggleListModel(state, action) {
+      state.addNewList = action.payload;
+    },
+    toggleNewCard(state, action) {
+      state.addNewCard = action.payload;
     },
   },
 });
@@ -64,6 +74,9 @@ export const {
   toggleAddNewMember,
   toggleCoverModel,
   toggleLabelModel,
+  toggleListModel,
+  toggleNewCard,
+  saveListId,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;
