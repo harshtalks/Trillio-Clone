@@ -10,13 +10,16 @@ import EditIcon from "@mui/icons-material/Edit";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { toggleSideMenu } from "../../store/UIReducer";
+import { format } from "date-fns";
 
 const Menu = () => {
   const dispatch = useAppDispatch();
   //
   const open = useAppSelector((state) => state.ui.sideMenu);
   //
+  const boardScreen = useAppSelector((state) => state.boardSceen);
 
+  const date = format(new Date(boardScreen.createdAt), "dd LLLL yyyy");
   //
   return (
     <Box
@@ -44,7 +47,7 @@ const Menu = () => {
         }}
       >
         <Typography gutterBottom variant="h6">
-          Devchallenges Board
+          {boardScreen.name}
         </Typography>
         <CloseIcon
           onClick={() => dispatch(toggleSideMenu())}
@@ -85,13 +88,13 @@ const Menu = () => {
             sx={{ color: "#333333", fontWeight: "600" }}
             variant="body1"
           >
-            Harsh Pareek
+            {boardScreen.user.name}
           </Typography>
           <Typography
             sx={{ color: "#BDBDBD", fontWeight: "600" }}
             variant="body2"
           >
-            on 4 July, 2022
+            on {date}
           </Typography>
         </Box>
       </Box>
@@ -121,12 +124,7 @@ const Menu = () => {
         />
       </Box>
       <Box sx={{ marginBottom: "30px" }}>
-        <Typography>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia quis
-          sed maxime libero consequuntur possimus! Quis eveniet, doloremque
-          consequatur, nihil dolor assumenda earum facilis beatae porro laborum
-          veniam sapiente voluptatum.
-        </Typography>
+        <Typography>{boardScreen.description}</Typography>
       </Box>
       <Box
         sx={{
@@ -160,86 +158,14 @@ const Menu = () => {
           >
             <Avatar
               sx={{ borderRadius: "8px" }}
-              alt="Remy Sharp"
-              src="/static/images/avatar/1.jpg"
+              alt={boardScreen.user.name ? boardScreen.user.name : "avatar"}
+              src={boardScreen.user.image ? boardScreen.user.image : ""}
             />
             <Typography
               sx={{ color: "#333333", fontWeight: "600" }}
               variant="body1"
             >
-              Harsh Pareek
-            </Typography>
-          </Box>
-          <Chip
-            sx={{
-              padding: "10px 15px",
-              borderRadius: "8px",
-              background: "#F2F2F2",
-            }}
-            label="admin"
-          />
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: "20px",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: "20px",
-            }}
-          >
-            <Avatar
-              sx={{ borderRadius: "8px" }}
-              alt="Remy Sharp"
-              src="/static/images/avatar/1.jpg"
-            />
-            <Typography
-              sx={{ color: "#333333", fontWeight: "600" }}
-              variant="body1"
-            >
-              Harsh Pareek
-            </Typography>
-          </Box>
-          <Chip
-            sx={{
-              padding: "10px 15px",
-              borderRadius: "8px",
-              background: "#F2F2F2",
-            }}
-            label="admin"
-          />
-        </Box>{" "}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: "20px",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: "20px",
-            }}
-          >
-            <Avatar
-              sx={{ borderRadius: "8px" }}
-              alt="Remy Sharp"
-              src="/static/images/avatar/1.jpg"
-            />
-            <Typography
-              sx={{ color: "#333333", fontWeight: "600" }}
-              variant="body1"
-            >
-              Harsh Pareek
+              {boardScreen.user.name}
             </Typography>
           </Box>
           <Chip

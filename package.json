@@ -2,6 +2,9 @@
   "name": "thullo",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -21,6 +24,7 @@
     "@next-auth/prisma-adapter": "^1.0.3",
     "@prisma/client": "^3.15.1",
     "@reduxjs/toolkit": "^1.8.2",
+    "date-fns": "^2.28.0",
     "framer-motion": "^6.3.11",
     "next": "12.1.6",
     "next-auth": "^4.5.0",

@@ -19,6 +19,7 @@ import { toggleAddNewMember } from "../../store/UIReducer";
 import { User } from "@prisma/client";
 import { motion } from "framer-motion";
 import { loadUsers } from "../../store/userReducers";
+import { LoadingButton } from "@mui/lab";
 
 export interface DialogTitleProps {
   id: string;
@@ -31,6 +32,7 @@ export default function AddNewMember() {
   const openNewMeberModel = useAppSelector((state) => state.ui.addNewMember);
   const users = useAppSelector((state) => state.users);
   const [click, setClick] = React.useState("");
+  const [nameQuery, setNameQuery] = React.useState("");
 
   const handleClickOpen = () => {
     dispatch(toggleAddNewMember());
@@ -42,6 +44,8 @@ export default function AddNewMember() {
   React.useEffect(() => {
     dispatch(loadUsers());
   }, []);
+
+  React.useEffect(() => {}, []);
 
   return (
     <div>
@@ -81,7 +85,7 @@ export default function AddNewMember() {
           >
             Search users you want to invite to
           </Typography>
-          <UserSearch />
+          <UserSearch nameQuery={nameQuery} setNameQuery={setNameQuery} />
           <Box
             sx={{
               marginTop: "20px",
@@ -150,9 +154,11 @@ export default function AddNewMember() {
               })}
           </Box>
           <Box sx={{ textAlign: "center" }}>
-            <Button
+            <LoadingButton
               variant="contained"
               size="large"
+              loadingPosition="start"
+              startIcon={<AddBoxIcon />}
               sx={{
                 marginTop: "20px",
                 textTransform: "capitalize",
@@ -160,7 +166,7 @@ export default function AddNewMember() {
               }}
             >
               Invite
-            </Button>
+            </LoadingButton>
           </Box>
         </Box>
       </Dialog>
