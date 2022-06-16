@@ -150,7 +150,6 @@ const DetailsSection = () => {
           </Box>
         </Grid>
       </Grid>
-      <CoverModel />
       <LabelModel />
     </Box>
   );

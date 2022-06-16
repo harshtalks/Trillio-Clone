@@ -68,6 +68,8 @@ model Comment {
   text        String
   userId      String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cardId String
+  card Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
 }
 
 model Board {
@@ -78,6 +80,7 @@ model Board {
   userId      String
   publiclyVisible Boolean
   image String?
+  description String?
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   members Member[]
   lists List[]
@@ -91,6 +94,7 @@ model Member {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   boards Board[]
   cards Card[]
+
 }
 
 
@@ -120,10 +124,12 @@ model Card{
   editedAt    DateTime? @updatedAt
   name        String
   listId      String
+  description String?
   image String?
   list List @relation(fields: [listId], references: [id], onDelete: Cascade)
   labels Label[]
   members Member[]
+  comments Comment[]
 }
 
 

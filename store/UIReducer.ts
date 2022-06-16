@@ -8,11 +8,13 @@ interface InitialState {
   addNewMember: boolean;
   coverModel: boolean;
   labelModel: boolean;
+  userId: string;
 }
 
 const initialState = {
   signingOut: false,
   sideMenu: false,
+  addNewBoardCard: false,
   cardDetailsModel: false,
   addNewMember: false,
   coverModel: false,
@@ -46,6 +48,9 @@ const uiSlice = createSlice({
     },
     toggleLabelModel(state) {
       state.labelModel = !state.labelModel;
+    },
+    saveUserId(state, action) {
+      state.userId = action.payload;
     },
   },
 });

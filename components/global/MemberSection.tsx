@@ -7,6 +7,7 @@ import Menu from "../sidebars/Menu";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { toggleSideMenu } from "../../store/UIReducer";
 import { motion } from "framer-motion";
+import { changeVisibilityAction } from "../../store/boardScreenReducer";
 
 const MemberSection = () => {
   const variants = {
@@ -15,6 +16,9 @@ const MemberSection = () => {
   };
   const sideMenu = useAppSelector((state) => state.ui.sideMenu);
   const dispatch = useAppDispatch();
+  const publiclyVisible = useAppSelector(
+    (state) => state.boardSceen.publiclyVisible
+  );
   return (
     <>
       <Box
@@ -27,7 +31,10 @@ const MemberSection = () => {
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: "2em" }}>
-          <ChangeVisibility />
+          <ChangeVisibility
+            isVisible={publiclyVisible}
+            action={changeVisibilityAction}
+          />
           <Stack sx={{ alignItems: "center" }} direction="row" spacing={2}>
             <Avatar
               sx={{ borderRadius: "8px" }}

@@ -1,9 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
+import addNewBoardReducer from "./addNewBoardReducer";
+import boardScreenReducer from "./boardScreenReducer";
 import UIReducer from "./UIReducer";
+import userReducers from "./userReducers";
 
 export const store = configureStore({
   reducer: {
     ui: UIReducer,
+    addNewBoard: addNewBoardReducer,
+    boardSceen: boardScreenReducer,
+    users: userReducers,
   },
 });
 

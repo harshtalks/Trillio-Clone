@@ -11,6 +11,8 @@ import LockIcon from "@mui/icons-material/Lock";
 
 import Typography from "@mui/material/Typography";
 import { Box, Chip } from "@mui/material";
+import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
+import { useAppDispatch } from "../../hooks/redux";
 
 export interface DialogTitleProps {
   id: string;
@@ -18,8 +20,17 @@ export interface DialogTitleProps {
   onClose: () => void;
 }
 
-export default function ChangeVisibility() {
+interface visibilityCardTypes {
+  action: ActionCreatorWithPayload<boolean, string>;
+  isVisible: boolean;
+}
+
+export default function ChangeVisibility({
+  action,
+  isVisible,
+}: visibilityCardTypes) {
   const [open, setOpen] = React.useState(false);
+  const dispatch = useAppDispatch();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -31,7 +42,7 @@ export default function ChangeVisibility() {
   return (
     <div>
       <Chip
-        label="Public"
+        label={isVisible ? "Public" : "Private"}
         sx={{
           padding: "10px",
           borderRadius: "8px",
@@ -41,12 +52,21 @@ export default function ChangeVisibility() {
           fontWeight: "500",
         }}
         icon={
-          <PublicIcon
-            sx={{
-              width: "16px",
-              height: "16px",
-            }}
-          />
+          isVisible ? (
+            <PublicIcon
+              sx={{
+                width: "16px",
+                height: "16px",
+              }}
+            />
+          ) : (
+            <LockIcon
+              sx={{
+                width: "16px",
+                height: "16px",
+              }}
+            />
+          )
         }
         onClick={handleClickOpen}
       />
@@ -79,6 +99,10 @@ export default function ChangeVisibility() {
                 cursor: "pointer",
               },
             }}
+            onClick={() => {
+              dispatch(action(true));
+              handleClose();
+            }}
           >
             <Box sx={{ display: "flex", gap: "10px", alignItems: "center" }}>
               <PublicIcon fontSize="small" />
@@ -105,6 +129,10 @@ export default function ChangeVisibility() {
                 background: "#F2F2F2",
                 cursor: "pointer",
               },
+            }}
+            onClick={() => {
+              dispatch(action(false));
+              handleClose();
             }}
           >
             <Box sx={{ display: "flex", gap: "10px", alignItems: "center" }}>

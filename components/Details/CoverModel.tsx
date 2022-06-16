@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { motion } from "framer-motion";
+import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 
 const style = {
   position: "absolute" as "absolute",
@@ -25,7 +26,11 @@ const style = {
   p: 2,
 };
 
-export default function CoverModel() {
+type coverModelAction = {
+  action: ActionCreatorWithPayload<string, string>;
+};
+
+export default function CoverModel({ action }: coverModelAction) {
   const dispatch = useAppDispatch();
   const coverModelCard = useAppSelector((state) => state.ui.coverModel);
   const handleOpen = () => dispatch(toggleCoverModel());
@@ -140,6 +145,10 @@ export default function CoverModel() {
                       }}
                       src={item.urls.small}
                       alt="random"
+                      onClick={() => {
+                        dispatch(action(item.urls.regular));
+                        handleClose();
+                      }}
                     />
                   </motion.div>
                 );

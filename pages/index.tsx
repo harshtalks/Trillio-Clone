@@ -1,38 +1,75 @@
-import { Alert, Box, Grid, Typography } from "@mui/material";
-import type { GetServerSideProps, NextPage } from "next";
-import { getSession, useSession } from "next-auth/react";
-import Head from "next/head";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-import List from "../components/homepageComps/List";
-import Layout from "../layout/Layout";
-import styles from "../styles/Home.module.css";
-import Details from "../components/Details";
-import { useAppSelector } from "../hooks/redux";
+import {
+  Alert,
+  AlertTitle,
+  Button,
+  Grid,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { Box } from "@mui/system";
+import { GetServerSideProps, NextPage } from "next";
+import { getSession } from "next-auth/react";
+import React from "react";
+import AddNewBoard from "../components/boards/AddNewBoard";
+import Header from "../components/global/Header";
+import useGetItems from "../hooks/getBoards";
+import { useAppDispatch } from "../hooks/redux";
+import { toggleAddNewBoardCard } from "../store/UIReducer";
+import { Board as BoardType } from "@prisma/client";
+import Board from "../components/boards/board";
+import BoardLoaderScreen from "../components/boards/BoardLoaderScreen";
+import { BoardProps } from "../types/types";
 
-const Home: NextPage = () => {
-  const detailsCardModel = useAppSelector((state) => state.ui.cardDetailsModel);
-  useEffect(() => {
-    if (window.location.hash && window.location.hash == "#_=_") {
-      window.location.hash = "";
-    }
-  }, []);
+const Boards: NextPage = (props: any) => {
+  const dispatch = useAppDispatch();
+  const { boards, error, loading } = useGetItems();
+
   return (
-    <Layout>
-      <Grid container spacing={4}>
-        <Grid item>
-          <List show={true} />
+    <Box sx={{ background: "#E5E7E6", minHeight: "100vh" }}>
+      <Header isBoardPage={false} />
+      <Box
+        sx={{
+          maxWidth: "1100px",
+          margin: "5rem auto",
+          padding: "4rem 0",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "2em",
+          }}
+        >
+          <Typography variant="h6">All boards</Typography>
+          <Button onClick={() => dispatch(toggleAddNewBoardCard())}>
+            Add New
+          </Button>
+        </Box>
+        <Grid sx={{ justifyContent: "center" }} container spacing={4}>
+          {loading ? (
+            [1, 2, 3, 4].map((el) => {
+              return <BoardLoaderScreen key={el} />;
+            })
+          ) : error ? (
+            <Alert severity="error">
+              <AlertTitle>Error</AlertTitle>
+              {error}
+            </Alert>
+          ) : (
+            boards.map((board: BoardProps) => {
+              return (
+                <Grid key={board.id} item>
+                  <Board board={board} />
+                </Grid>
+              );
+            })
+          )}
         </Grid>
-        <Grid item>
-          <List show={true} />
-        </Grid>
-        <Grid item>
-          <List show={false} />
-        </Grid>
-      </Grid>
-      {detailsCardModel && <Details />}
-    </Layout>
+      </Box>
+      <AddNewBoard />
+    </Box>
   );
 };
 
@@ -49,8 +86,9 @@ export const getServerSideProps: GetServerSideProps = async (context: any) => {
   }
 
   return {
-    props: { session },
+    props: {
+      session,
+    },
   };
 };
-
-export default Home;
+export default Boards;

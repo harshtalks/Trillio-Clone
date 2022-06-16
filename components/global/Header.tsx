@@ -6,9 +6,11 @@ import SearchBar from "../smallerComps/SearchBar";
 import Profile from "../smallerComps/Profile";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useAppSelector } from "../../hooks/redux";
 
-const Header = () => {
+const Header = ({ isBoardPage = false }: { isBoardPage: boolean }) => {
   const router = useRouter();
+  const boardData = useAppSelector((state) => state.boardSceen);
   return (
     <Box
       sx={{
@@ -23,39 +25,41 @@ const Header = () => {
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
         <Image src={Logo} width={50} height={50} alt="logo" />
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: "2rem",
-          }}
-        >
-          <Typography sx={{ fontSize: "18px" }} variant="h6">
-            Devchallenges Board
-          </Typography>
-          <Chip
+        {isBoardPage && (
+          <Box
             sx={{
-              padding: "10px",
-              borderRadius: "8px",
-              background: "#F2F2F2",
-              color: "#828282",
-              fontSize: "12px",
-              fontWeight: "500",
+              display: "flex",
+              alignItems: "center",
+              gap: "2rem",
             }}
-            onClick={() => {
-              router.push("/boards");
-            }}
-            icon={
-              <DragIndicatorIcon
-                sx={{
-                  width: "16px",
-                  height: "16px",
-                }}
-              />
-            }
-            label="All Boards"
-          />
-        </Box>
+          >
+            <Typography sx={{ fontSize: "18px" }} variant="h6">
+              {boardData.name}
+            </Typography>
+            <Chip
+              sx={{
+                padding: "10px",
+                borderRadius: "8px",
+                background: "#F2F2F2",
+                color: "#828282",
+                fontSize: "12px",
+                fontWeight: "500",
+              }}
+              onClick={() => {
+                router.push("/");
+              }}
+              icon={
+                <DragIndicatorIcon
+                  sx={{
+                    width: "16px",
+                    height: "16px",
+                  }}
+                />
+              }
+              label="All Boards"
+            />
+          </Box>
+        )}
       </Box>
       <Box
         sx={{

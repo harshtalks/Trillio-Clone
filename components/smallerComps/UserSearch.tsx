@@ -1,8 +1,12 @@
 import { Box, Button, Input } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Fetcher from "../../lib/fetcher";
 
 const UserSearch = () => {
+  const [name, setName] = useState("");
+  const [loading, setLoading] = React.useState(false);
+
   return (
     <Box
       sx={{
@@ -12,6 +16,8 @@ const UserSearch = () => {
       }}
     >
       <Input
+        value={name}
+        onChange={(e) => setName(e.target.value)}
         sx={{ marginLeft: "10px" }}
         disableUnderline
         placeholder="keywords"

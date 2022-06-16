@@ -11,11 +11,14 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import LockIcon from "@mui/icons-material/Lock";
 
 import Typography from "@mui/material/Typography";
-import { Avatar, Box, Chip } from "@mui/material";
+import { Avatar, Box, Chip, Skeleton, Stack } from "@mui/material";
 import SearchBar from "./SearchBar";
 import UserSearch from "./UserSearch";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { toggleAddNewMember } from "../../store/UIReducer";
+import { User } from "@prisma/client";
+import { motion } from "framer-motion";
+import { loadUsers } from "../../store/userReducers";
 
 export interface DialogTitleProps {
   id: string;
@@ -26,6 +29,8 @@ export interface DialogTitleProps {
 export default function AddNewMember() {
   const dispatch = useAppDispatch();
   const openNewMeberModel = useAppSelector((state) => state.ui.addNewMember);
+  const users = useAppSelector((state) => state.users);
+  const [click, setClick] = React.useState("");
 
   const handleClickOpen = () => {
     dispatch(toggleAddNewMember());
@@ -33,6 +38,10 @@ export default function AddNewMember() {
   const handleClose = () => {
     dispatch(toggleAddNewMember());
   };
+
+  React.useEffect(() => {
+    dispatch(loadUsers());
+  }, []);
 
   return (
     <div>
@@ -79,110 +88,66 @@ export default function AddNewMember() {
               height: "160px",
               overflow: "auto",
               borderRadius: "8px",
-              padding: "0.5em 1em",
+              padding: "0.5em 0.5em",
               border: "1px solid #E0E0E0",
             }}
           >
-            <Box
-              sx={{
-                margin: "10px 0",
-                display: "flex",
-                alignItems: "center",
-                gap: "1em",
-              }}
-            >
-              <Avatar
-                sx={{ borderRadius: "8px", width: "32px", height: "32px" }}
-                alt="Cindy Baker"
-                src="/static/images/avatar/3.jpg"
-              />
-              <Typography
-                sx={{ color: "#333333", fontWeight: "600" }}
-                variant="body1"
-              >
-                Harsh Pareek
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                margin: "10px 0",
-                display: "flex",
-                alignItems: "center",
-                gap: "1em",
-              }}
-            >
-              <Avatar
-                sx={{ borderRadius: "8px", width: "32px", height: "32px" }}
-                alt="Cindy Baker"
-                src="/static/images/avatar/3.jpg"
-              />
-              <Typography
-                sx={{ color: "#333333", fontWeight: "600" }}
-                variant="body1"
-              >
-                Harsh Pareek
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                margin: "10px 0",
-                display: "flex",
-                alignItems: "center",
-                gap: "1em",
-              }}
-            >
-              <Avatar
-                sx={{ borderRadius: "8px", width: "32px", height: "32px" }}
-                alt="Cindy Baker"
-                src="/static/images/avatar/3.jpg"
-              />
-              <Typography
-                sx={{ color: "#333333", fontWeight: "600" }}
-                variant="body1"
-              >
-                Harsh Pareek
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                margin: "10px 0",
-                display: "flex",
-                alignItems: "center",
-                gap: "1em",
-              }}
-            >
-              <Avatar
-                sx={{ borderRadius: "8px", width: "32px", height: "32px" }}
-                alt="Cindy Baker"
-                src="/static/images/avatar/3.jpg"
-              />
-              <Typography
-                sx={{ color: "#333333", fontWeight: "600" }}
-                variant="body1"
-              >
-                Harsh Pareek
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                margin: "10px 0",
-                display: "flex",
-                alignItems: "center",
-                gap: "1em",
-              }}
-            >
-              <Avatar
-                sx={{ borderRadius: "8px", width: "32px", height: "32px" }}
-                alt="Cindy Baker"
-                src="/static/images/avatar/3.jpg"
-              />
-              <Typography
-                sx={{ color: "#333333", fontWeight: "600" }}
-                variant="body1"
-              >
-                Harsh Pareek
-              </Typography>
-            </Box>
+            {users.status === "loading" && (
+              <Stack spacing={3}>
+                {[1, 2, 3].map((item) => {
+                  return (
+                    <Stack key={item} direction={"row"} spacing={2}>
+                      <Skeleton variant="circular" width={32} height={32} />
+                      <Skeleton variant="text" width={150} />
+                    </Stack>
+                  );
+                })}
+              </Stack>
+            )}
+            {users.users &&
+              users.users.map((user: User) => {
+                return (
+                  <motion.div
+                    key={user.id}
+                    whileHover={{
+                      cursor: "pointer",
+                      scale: 1.01,
+                    }}
+                  >
+                    <Box
+                      onClick={() => setClick(user.id)}
+                      sx={{
+                        margin: "10px 0",
+                        display: "flex",
+                        alignItems: "center",
+                        padding: "5px",
+                        gap: "1em",
+                        background: `${click === user.id ? "#e9ecef" : "none"}`,
+                        borderRadius: "8px",
+                        "&:hover": {
+                          background: "#e9ecef",
+                        },
+                      }}
+                    >
+                      <Avatar
+                        sx={{
+                          borderRadius: "8px",
+                          width: "32px",
+                          height: "32px",
+                        }}
+                        alt={user.name ? user.name : "avatar"}
+                        src={user.image ? user.image : ""}
+                      />
+                      <Typography
+                        sx={{ color: "#333333", fontWeight: "600" }}
+                        variant="body1"
+                      >
+                        {user.name}
+                      </Typography>
+                    </Box>
+                  </motion.div>
+                );
+              })}
           </Box>
           <Box sx={{ textAlign: "center" }}>
             <Button

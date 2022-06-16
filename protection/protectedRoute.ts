@@ -1,7 +1,7 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 
-export const validateRouter = (handler: NextApiHandler) => {
+export const validateRouter = (handler: any) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     let session;
     try {
@@ -16,6 +16,6 @@ export const validateRouter = (handler: NextApiHandler) => {
       return;
     }
 
-    return handler(req, res);
+    return handler(req, res, session);
   };
 };

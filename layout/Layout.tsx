@@ -5,9 +5,11 @@ import LogoutFeedBack from "../components/feedback/LogoutFeedBack";
 import Header from "../components/global/Header";
 import MemberSection from "../components/global/MemberSection";
 import { useAppSelector } from "../hooks/redux";
+import { BoardProps } from "../types/types";
 
 type layout = {
   children: React.ReactNode;
+  boardData: BoardProps | null;
 };
 
 const Layout = ({ children }: layout) => {
@@ -20,7 +22,7 @@ const Layout = ({ children }: layout) => {
         height: "100%",
       }}
     >
-      <Header />
+      <Header isBoardPage={true} />
       <MemberSection />
       {logoutFeedback && <LogoutFeedBack />}
       <Box
