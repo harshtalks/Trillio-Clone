@@ -1,7 +1,6 @@
 import { Box, Button, Chip, Input, Typography } from "@mui/material";
 import React from "react";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-import Logo from "../../assets/svg/logo.svg";
 import SearchBar from "../smallerComps/SearchBar";
 import Profile from "../smallerComps/Profile";
 import Image from "next/image";
@@ -24,7 +23,6 @@ const Header = ({ isBoardPage = false }: { isBoardPage: boolean }) => {
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-        <Image src={Logo} width={50} height={50} alt="logo" />
         {isBoardPage && (
           <Box
             sx={{
