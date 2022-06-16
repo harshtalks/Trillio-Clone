@@ -151,7 +151,6 @@ const DetailsSection = () => {
         </Grid>
       </Grid>
       <LabelModel />
-      {/* <CoverModel /> */}
     </Box>
   );
 };
