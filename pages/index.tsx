@@ -19,10 +19,12 @@ import { Board as BoardType } from "@prisma/client";
 import Board from "../components/boards/board";
 import BoardLoaderScreen from "../components/boards/BoardLoaderScreen";
 import { BoardProps } from "../types/types";
+import useMediaPoints from "../hooks/useMediaPoints";
 
 const Boards: NextPage = (props: any) => {
   const dispatch = useAppDispatch();
   const { boards, error, loading } = useGetItems();
+  const { small, smallest, medium } = useMediaPoints();
 
   return (
     <Box sx={{ background: "#E5E7E6", minHeight: "100vh" }}>
@@ -30,8 +32,9 @@ const Boards: NextPage = (props: any) => {
       <Box
         sx={{
           maxWidth: "1100px",
-          margin: "5rem auto",
-          padding: "4rem 0",
+          width: "90%",
+          margin: small ? "2rem auto" : "5rem auto",
+          padding: small ? "1rem auto" : "4rem 0",
         }}
       >
         <Box

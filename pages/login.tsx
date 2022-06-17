@@ -8,6 +8,7 @@ import {
   Stack,
   Tooltip,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { NextPage } from "next";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -18,10 +19,12 @@ import { useRouter } from "next/router";
 import { signIn, useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import useMediaPoints from "../hooks/useMediaPoints";
 
 const Login: NextPage = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const { small, smallest, medium } = useMediaPoints();
   console.log(session);
   return (
     <Box
@@ -29,7 +32,7 @@ const Login: NextPage = () => {
         background: "#ECE2D0",
         width: "100%",
         minHeight: "100vh",
-        padding: "4rem 2rem",
+        padding: small ? "2rem" : "4rem 2rem",
         textAlign: "center",
       }}
     >
@@ -118,7 +121,7 @@ const Login: NextPage = () => {
               sx={{
                 background: "#F7F7F2",
                 borderRadius: "12px",
-                width: "50%",
+                width: small ? "100%" : "50%",
                 marginLeft: "auto",
                 marginRight: "auto",
                 textAlign: "center",
@@ -153,11 +156,11 @@ const Login: NextPage = () => {
                   gap: "1em",
                 }}
               >
-                <Box sx={{ width: "20%" }}>
+                <Box sx={{ width: small ? "40%" : "20%" }}>
                   <Divider />
                 </Box>
                 <Typography variant="body1">Or continue with</Typography>
-                <Box sx={{ width: "20%" }}>
+                <Box sx={{ width: small ? "40%" : "20%" }}>
                   <Divider />
                 </Box>
               </Box>
