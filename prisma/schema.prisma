@@ -48,7 +48,8 @@ model User {
   sessions      Session[]
   comments Comment[]
   boards Board[]
-  member Member[]
+  memberBoards MemberBoard[]
+  memberCards MemberCard[]
 }
 
 model VerificationToken {
@@ -82,19 +83,28 @@ model Board {
   image String?
   description String?
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  members Member[]
+  members MemberBoard[]
   lists List[]
 }
 
-model Member {
+model MemberBoard {
   id          String   @id @default(cuid())
   createdAt   DateTime @default(now())
   editedAt    DateTime? @updatedAt
-  userId      String
+  userId      String @unique
+  boardId     String 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  boards Board[]
-  cards Card[]
+  board Board @relation(fields: [boardId], references: [id], onDelete: Cascade)
+}
 
+model MemberCard {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  editedAt    DateTime? @updatedAt
+  userId      String @unique
+  cardId     String 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  card Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
 }
 
 
@@ -128,7 +138,7 @@ model Card{
   image String?
   list List @relation(fields: [listId], references: [id], onDelete: Cascade)
   labels Label[]
-  members Member[]
+  members MemberCard[]
   comments Comment[]
 }
 

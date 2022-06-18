@@ -1,5 +1,12 @@
-import { Box, Chip, Grid, Typography } from "@mui/material";
-import React from "react";
+import {
+  Alert,
+  Box,
+  Chip,
+  CircularProgress,
+  Grid,
+  Typography,
+} from "@mui/material";
+import React, { useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import DescriptionIcon from "@mui/icons-material/Description";
 import EditIcon from "@mui/icons-material/Edit";
@@ -11,24 +18,37 @@ import CommentBox from "./CommentBox";
 import Comments from "./Comments";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import CoverModel from "./CoverModel";
-import { useAppDispatch } from "../../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { toggleCoverModel, toggleLabelModel } from "../../store/UIReducer";
 import LabelModel from "./LabelModel";
+import { CardProps } from "../../types/types";
+import { loadComments } from "../../store/commentsReducer";
 
-const DetailsSection = () => {
+const DetailsSection = ({ data }: { data: CardProps }) => {
   const dispatch = useAppDispatch();
+  const listName = useAppSelector((state) => state.ui.currentList);
+  const {
+    data: comments,
+    error,
+    status,
+  } = useAppSelector((state) => state.comments);
+
+  useEffect(() => {
+    dispatch(loadComments(data.id));
+  }, []);
+
   return (
     <Box sx={{ margin: "1em 0" }}>
       <Grid container spacing={6}>
         <Grid item xs={8}>
           <Typography sx={{ fontSize: "1.2em" }} variant="body1">
-            This is the title of the card
+            {data.name}
           </Typography>
           <Typography
             sx={{ fontSize: "0.8em", color: "#BDBDBD", fontWeight: "bold" }}
             variant="body2"
           >
-            List: <strong style={{ color: "#000" }}>In Progress</strong>
+            List: <strong style={{ color: "#000" }}>{listName}</strong>
           </Typography>
           <Box
             sx={{
@@ -59,12 +79,7 @@ const DetailsSection = () => {
             />
           </Box>
           <Box sx={{ marginBottom: "30px" }}>
-            <Typography>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia
-              quis sed maxime libero consequuntur possimus! Quis eveniet,
-              doloremque consequatur, nihil dolor assumenda earum facilis beatae
-              porro laborum veniam sapiente voluptatum.
-            </Typography>
+            <Typography>{data.description}</Typography>
           </Box>
           <Box
             sx={{
@@ -83,9 +98,33 @@ const DetailsSection = () => {
               Comments
             </Typography>
           </Box>
-          <CommentBox />
-          <Comments />
-          <Comments />
+          <CommentBox data={data} />
+          <>
+            {status === "succeeded" &&
+              (comments.length > 0 ? (
+                comments.map((comment) => (
+                  <Comments
+                    commentCardId={data.id}
+                    commentData={comment}
+                    key={comment.id}
+                  />
+                ))
+              ) : (
+                <Chip
+                  sx={{ borderRadius: "8px", margin: "2rem 0" }}
+                  variant="outlined"
+                  label="No comments available under this post"
+                />
+              ))}
+            {status === "loading" && (
+              <CircularProgress sx={{ margin: "2rem 0" }} />
+            )}
+            {status === "failed" && (
+              <Alert sx={{ margin: "2rem 0" }} severity="error">
+                {error}
+              </Alert>
+            )}
+          </>
         </Grid>
         <Grid item xs={4}>
           <Box

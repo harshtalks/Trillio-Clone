@@ -15,11 +15,11 @@ import {
   Card as CardProps,
   Label,
   List as ListProps,
-  Member,
+  MemberCard,
 } from "@prisma/client";
 
 type listprops = ListProps & {
-  card: Array<CardProps & { labels: Array<Label>; members: Member }>;
+  card: Array<CardProps & { labels: Array<Label>; members: MemberCard }>;
 };
 
 const List = ({
@@ -57,7 +57,9 @@ const List = ({
             {list &&
               list.card &&
               list.card.map((card: CardProps) => {
-                return <Card key={card.id} cardData={card} />;
+                return (
+                  <Card key={card.id} cardData={card} listName={list!.name} />
+                );
               })}
             <Alert
               action={

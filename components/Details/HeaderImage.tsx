@@ -3,11 +3,11 @@ import Image from "next/image";
 import React from "react";
 import img from "../../assets/jpg/image.jpeg";
 
-const HeaderImage = () => {
+const HeaderImage = ({ image }: { image: string | null }) => {
   return (
     <Box sx={{ height: "150px", position: "relative" }}>
       <Image
-        src={img}
+        src={image || img}
         alt="cover"
         layout="fill"
         objectFit="cover"

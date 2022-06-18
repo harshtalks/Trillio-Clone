@@ -5,33 +5,15 @@ import { validateRouter } from "../../protection/protectedRoute";
 
 export default validateRouter(
   async (req: NextApiRequest, res: NextApiResponse, session: Session) => {
-    const { boardId, userId } = req.body;
-
-    let board;
-    let member;
+    let comment;
+    const { cardId, userId, text } = req.body;
 
     try {
-      board = await prisma.board.findUnique({
-        where: {
-          id: boardId,
-        },
-        include: {
-          members: {
-            include: {
-              user: true,
-            },
-          },
-        },
-      });
-
-      if (board?.members.find((member) => member.user.id === userId)) {
-        throw new Error("Member Already Exists.");
-      }
-
-      member = await prisma.memberBoard.create({
+      comment = await prisma.comment.create({
         data: {
           userId: userId,
-          boardId: boardId,
+          text: text,
+          cardId: cardId,
         },
         include: {
           user: true,
@@ -43,6 +25,6 @@ export default validateRouter(
       return;
     }
 
-    return res.json(member);
+    return res.json(comment);
   }
 );

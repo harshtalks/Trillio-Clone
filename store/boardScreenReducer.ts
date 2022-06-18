@@ -18,9 +18,29 @@ const boardScreenSlice = createSlice({
     changeVisibilityAction(state, action) {
       state.publiclyVisible = action.payload;
     },
+    addMember(state, action) {
+      state.members = [...state.members, action.payload];
+    },
+    addList(state, action) {
+      state.lists = [...state.lists, action.payload];
+    },
+    addCard(state, action) {
+      state.lists.map((list) => {
+        if (list.id === action.payload.id) {
+          list.card = [...list.card, action.payload];
+        }
+        return list;
+      });
+    },
   },
 });
 
-export const { storeBoard, changeVisibilityAction } = boardScreenSlice.actions;
+export const {
+  storeBoard,
+  changeVisibilityAction,
+  addMember,
+  addList,
+  addCard,
+} = boardScreenSlice.actions;
 
 export default boardScreenSlice.reducer;

@@ -1,20 +1,23 @@
-import { Box } from "@mui/material";
-import React from "react";
+import { Alert, Box, CircularProgress, LinearProgress } from "@mui/material";
+import React, { useEffect } from "react";
 import DetailsSection from "./DetailsSection";
 import HeaderImage from "./HeaderImage";
 import { motion } from "framer-motion";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { useAppDispatch } from "../../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { toggleCardDetailsModel } from "../../store/UIReducer";
+import { loadCardData } from "../../store/cardScreenReducer";
 
 const Index = () => {
   const dispatch = useAppDispatch();
+  const { data, error, status } = useAppSelector((state) => state.cardScreen);
+
   return (
     <motion.div animate={{ opacity: 1 }}>
       <Box
         sx={{
           width: "70%",
-          maxHeight: "90vh",
+          height: "90vh",
           overflow: "auto",
           background: "#faf9f9",
           position: "absolute",
@@ -26,18 +29,28 @@ const Index = () => {
           padding: "1em",
         }}
       >
-        <HeaderImage />
-        <DetailsSection />
-        <motion.div whileHover={{ cursor: "pointer" }}>
-          <CancelIcon
-            onClick={() => {
-              dispatch(toggleCardDetailsModel());
-            }}
-            color="primary"
-            fontSize="large"
-            sx={{ position: "absolute", right: "10px", top: "0" }}
-          />
-        </motion.div>
+        {status === "loading" && (
+          <>
+            <LinearProgress color="secondary" sx={{ margin: "2rem auto" }} />
+          </>
+        )}
+        {error && <Alert severity="error">{error}</Alert>}
+        {status === "succeeded" && (
+          <>
+            <HeaderImage image={data.image} />
+            <DetailsSection data={data} />
+            <motion.div whileHover={{ cursor: "pointer" }}>
+              <CancelIcon
+                onClick={() => {
+                  dispatch(toggleCardDetailsModel());
+                }}
+                color="primary"
+                fontSize="large"
+                sx={{ position: "absolute", right: "10px", top: "0" }}
+              />
+            </motion.div>
+          </>
+        )}
       </Box>
     </motion.div>
   );

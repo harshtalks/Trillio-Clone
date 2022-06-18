@@ -12,14 +12,32 @@
 //   lists List[]
 // }
 
-import { Board, Card, Label, List, Member, User } from "@prisma/client";
+import {
+  Board,
+  Card,
+  Comment,
+  Label,
+  List,
+  MemberBoard,
+  MemberCard,
+  User,
+} from "@prisma/client";
 
-type memberType = Array<Member & { user: User }>;
+type memberBoardType = Array<MemberBoard & { user: User }>;
+type memberCardType = Array<MemberCard & { user: User }>;
 
 export type BoardProps = Board & {
   lists: Array<
-    List & { card: Array<Card & { labels: Array<Label>; members: Member }> }
+    List & {
+      card: Array<Card & { labels: Array<Label>; members: memberCardType }>;
+    }
   >;
   user: User;
-  members: memberType;
+  members: memberBoardType;
+};
+
+export type CardProps = Card & {
+  labels: Array<Label>;
+  members: memberCardType;
+  comments: Array<Comment & { user: User }>;
 };

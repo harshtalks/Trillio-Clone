@@ -19,6 +19,7 @@ const MemberSection = () => {
   const publiclyVisible = useAppSelector(
     (state) => state.boardSceen.publiclyVisible
   );
+  const boardMembers = useAppSelector((state) => state.boardSceen.members);
   return (
     <>
       <Box
@@ -36,22 +37,16 @@ const MemberSection = () => {
             action={changeVisibilityAction}
           />
           <Stack sx={{ alignItems: "center" }} direction="row" spacing={2}>
-            <Avatar
-              sx={{ borderRadius: "8px" }}
-              alt="Remy Sharp"
-              src="https://i.pravatar.cc/150?img=3"
-            />
-            <Avatar
-              sx={{ borderRadius: "8px" }}
-              alt="Travis Howard"
-              src="https://i.pravatar.cc/150?img=2"
-            />
-            <Avatar
-              sx={{ borderRadius: "8px" }}
-              alt="Cindy Baker"
-              src="https://i.pravatar.cc/150?img=1"
-            />
-            <AddNewMember />
+            {boardMembers &&
+              boardMembers.map((member) => (
+                <Avatar
+                  key={member.id}
+                  sx={{ borderRadius: "8px" }}
+                  alt={member.user.name ? member.user.name : "user"}
+                  src={member.user.image ? member.user.image : ""}
+                />
+              ))}
+            <AddNewMember addType="board" />
           </Stack>
         </Box>
         <Chip

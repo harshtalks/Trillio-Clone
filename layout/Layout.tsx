@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
+import DeleteCommentFeedback from "../components/Details/DeleteCommentFeedback";
 import LogoutFeedBack from "../components/feedback/LogoutFeedBack";
 import Header from "../components/global/Header";
 import MemberSection from "../components/global/MemberSection";
@@ -39,6 +40,7 @@ const Layout = ({ children }: layout) => {
       >
         {children}
       </Box>
+      <DeleteCommentFeedback />
     </Box>
   );
 };

@@ -7,13 +7,22 @@ import AddBoxRoundedIcon from "@mui/icons-material/AddBoxRounded";
 import { motion } from "framer-motion";
 import { useAppDispatch } from "../../hooks/redux";
 import {
+  setCurrentList,
   toggleAddNewMember,
   toggleCardDetailsModel,
 } from "../../store/UIReducer";
 import { Card } from "@prisma/client";
 import Image from "next/image";
+import AddNewMember from "../smallerComps/AddNewMember";
+import { loadCardData } from "../../store/cardScreenReducer";
 
-const Card = ({ cardData }: { cardData: Card }) => {
+const Card = ({
+  cardData,
+  listName,
+}: {
+  cardData: Card;
+  listName?: string;
+}) => {
   const dispatch = useAppDispatch();
   return (
     <motion.div whileHover={{ cursor: "pointer", scale: 1.01 }}>
@@ -28,40 +37,41 @@ const Card = ({ cardData }: { cardData: Card }) => {
           marginBottom: "1.5em",
         }}
       >
-        {cardData.image && (
-          <Box
-            sx={{
-              width: "100%",
-              height: "150px",
-              position: "relative",
-              margin: "0 auto",
-              marginBottom: "10px",
-            }}
-          >
-            <Image
-              style={{ borderRadius: "12px" }}
-              src={cardData.image}
-              alt="img"
-              layout="fill"
-              objectFit="cover"
-              priority={true}
-            />
-          </Box>
-        )}
-        <Typography
+        <Box
           onClick={() => {
             dispatch(toggleCardDetailsModel());
+            dispatch(loadCardData(cardData.id));
+            dispatch(setCurrentList(listName));
           }}
-          gutterBottom
-          variant="h6"
         >
-          {cardData.name}
-        </Typography>
-        <Stack direction={"row"} gap={2}>
-          <Chip variant="outlined" label="concept" color="success" />
-          <Chip variant="outlined" label="concept" color="info" />
-        </Stack>
-
+          {cardData.image && (
+            <Box
+              sx={{
+                width: "100%",
+                height: "150px",
+                position: "relative",
+                margin: "0 auto",
+                marginBottom: "10px",
+              }}
+            >
+              <Image
+                style={{ borderRadius: "12px" }}
+                src={cardData.image}
+                alt="img"
+                layout="fill"
+                objectFit="cover"
+                priority={true}
+              />
+            </Box>
+          )}
+          <Typography gutterBottom variant="h6">
+            {cardData.name}
+          </Typography>
+          <Stack direction={"row"} gap={2}>
+            <Chip variant="outlined" label="concept" color="success" />
+            <Chip variant="outlined" label="concept" color="info" />
+          </Stack>
+        </Box>
         <Box
           sx={{
             display: "flex",
@@ -73,13 +83,7 @@ const Card = ({ cardData }: { cardData: Card }) => {
           }}
         >
           <Tooltip title="Add member">
-            <motion.div whileHover={{ opacity: 0.7 }}>
-              <AddBoxRoundedIcon
-                onClick={() => dispatch(toggleAddNewMember())}
-                fontSize="large"
-                color="primary"
-              />
-            </motion.div>
+            <AddNewMember addType="card" cardId={cardData.id} />
           </Tooltip>
           <Box
             sx={{

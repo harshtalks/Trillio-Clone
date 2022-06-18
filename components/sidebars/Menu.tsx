@@ -81,7 +81,7 @@ const Menu = () => {
         <Avatar
           sx={{ borderRadius: "8px" }}
           alt="Remy Sharp"
-          src="/static/images/avatar/1.jpg"
+          src={boardScreen.user.image ? boardScreen.user.image : ""}
         />
         <Box>
           <Typography
@@ -141,42 +141,49 @@ const Menu = () => {
         </Typography>
       </Box>
       <Box>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: "20px",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: "20px",
-            }}
-          >
-            <Avatar
-              sx={{ borderRadius: "8px" }}
-              alt={boardScreen.user.name ? boardScreen.user.name : "avatar"}
-              src={boardScreen.user.image ? boardScreen.user.image : ""}
-            />
-            <Typography
-              sx={{ color: "#333333", fontWeight: "600" }}
-              variant="body1"
-            >
-              {boardScreen.user.name}
-            </Typography>
-          </Box>
-          <Chip
-            sx={{
-              padding: "10px 15px",
-              borderRadius: "8px",
-              background: "#F2F2F2",
-            }}
-            label="admin"
-          />
-        </Box>
+        {boardScreen.members
+          ? boardScreen.members.map((member) => (
+              <Box
+                key={member.id}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: "20px",
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "20px",
+                  }}
+                >
+                  <Avatar
+                    sx={{ borderRadius: "8px" }}
+                    alt={member.user.name ? member.user.name : "avatar"}
+                    src={member.user.image ? member.user.image : ""}
+                  />
+                  <Typography
+                    sx={{ color: "#333333", fontWeight: "600" }}
+                    variant="body1"
+                  >
+                    {member.user.name}
+                  </Typography>
+                </Box>
+                <Chip
+                  sx={{
+                    padding: "10px 15px",
+                    borderRadius: "8px",
+                    background: "#F2F2F2",
+                  }}
+                  label={
+                    member.userId === boardScreen.user.id ? "Admin" : "Member"
+                  }
+                />
+              </Box>
+            ))
+          : null}
       </Box>
     </Box>
   );

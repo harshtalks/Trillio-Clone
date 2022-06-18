@@ -4,33 +4,34 @@ import { validateRouter } from "../../protection/protectedRoute";
 
 export default validateRouter(
   async (req: NextApiRequest, res: NextApiResponse, session: any) => {
-    const { name, boardID } = req.body;
-
-    let list;
+    const { cardId } = req.body;
+    let card;
 
     try {
-      list = await prisma.list.create({
-        data: {
-          name: name,
-          boardId: boardID,
+      card = await prisma.card.findUnique({
+        where: {
+          id: cardId,
         },
         include: {
-          card: {
+          labels: true,
+          members: {
             include: {
-              labels: true,
-              members: {
-                include: {
-                  user: true,
-                },
-              },
+              user: true,
+            },
+          },
+          comments: {
+            include: {
+              user: true,
             },
           },
         },
       });
     } catch (e: any) {
-      res.status(401).json({ error: e.message });
+      res.status(401);
+      res.json({ error: e.message });
       return;
     }
-    return res.json(list);
+
+    return res.json(card);
   }
 );

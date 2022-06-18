@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import addNewBoardReducer from "./addNewBoardReducer";
 import addNewCard from "./addNewCard";
+import cardScreenReducer from "./cardScreenReducer";
 import boardScreenReducer from "./boardScreenReducer";
 import UIReducer from "./UIReducer";
 import userReducers from "./userReducers";
+import commentsReducer from "./commentsReducer";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +14,8 @@ export const store = configureStore({
     boardSceen: boardScreenReducer,
     users: userReducers,
     addCard: addNewCard,
+    cardScreen: cardScreenReducer,
+    comments: commentsReducer,
   },
 });
 

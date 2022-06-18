@@ -88,7 +88,7 @@ export default function Index() {
             Add a new list in the board - <strong>{boardName}</strong>
           </Typography>
           {error !== "" && (
-            <Alert>
+            <Alert severity="error">
               <AlertTitle>Error</AlertTitle>
               {error}
             </Alert>

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -11,15 +12,26 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import LockIcon from "@mui/icons-material/Lock";
 
 import Typography from "@mui/material/Typography";
-import { Avatar, Box, Chip, Skeleton, Stack } from "@mui/material";
+import {
+  Alert,
+  AlertTitle,
+  Avatar,
+  Box,
+  Chip,
+  Skeleton,
+  Stack,
+} from "@mui/material";
 import SearchBar from "./SearchBar";
 import UserSearch from "./UserSearch";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { toggleAddNewMember } from "../../store/UIReducer";
 import { User } from "@prisma/client";
 import { motion } from "framer-motion";
-import { loadUsers } from "../../store/userReducers";
+import { loadUsers, queryUser } from "../../store/userReducers";
 import { LoadingButton } from "@mui/lab";
+import Fetcher from "../../lib/fetcher";
+import { addMember } from "../../store/boardScreenReducer";
+import { useRouter } from "next/router";
 
 export interface DialogTitleProps {
   id: string;
@@ -27,12 +39,38 @@ export interface DialogTitleProps {
   onClose: () => void;
 }
 
-export default function AddNewMember() {
+interface feedbackType {
+  display: boolean;
+  content: string;
+  title: string;
+  severity: "success" | "warning" | "error" | "info";
+}
+
+const defaultstate: feedbackType = {
+  display: false,
+  content: "",
+  severity: "info",
+  title: "",
+};
+
+export default function AddNewMember({
+  addType,
+  cardId,
+}: {
+  addType: "board" | "card";
+  cardId?: string;
+}) {
   const dispatch = useAppDispatch();
   const openNewMeberModel = useAppSelector((state) => state.ui.addNewMember);
   const users = useAppSelector((state) => state.users);
   const [click, setClick] = React.useState("");
   const [nameQuery, setNameQuery] = React.useState("");
+  const boardId = useAppSelector((state) => state.boardSceen.id);
+  const [loading, setLoading] = React.useState(false);
+
+  const router = useRouter();
+
+  const [feedback, setFeedback] = React.useState(defaultstate as feedbackType);
 
   const handleClickOpen = () => {
     dispatch(toggleAddNewMember());
@@ -45,7 +83,49 @@ export default function AddNewMember() {
     dispatch(loadUsers());
   }, []);
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    dispatch(queryUser(nameQuery));
+  }, [nameQuery]);
+
+  const addBoardMember = async () => {
+    let result;
+    setLoading(true);
+    try {
+      if (addType === "board") {
+        result = await Fetcher("/addMemberBoard", {
+          boardId: boardId,
+          userId: click,
+        });
+      } else {
+        result = await Fetcher("/addMemberCard", {
+          userId: click,
+          cardId: cardId,
+        });
+      }
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+      console.log(result);
+      dispatch(addMember(result));
+      setFeedback({
+        display: true,
+        title: "Successfully created",
+        content: `member has been invited to the ${addType} successfully`,
+        severity: "success",
+      });
+      setLoading(false);
+      router.reload();
+    } catch (e: any) {
+      setFeedback({
+        display: true,
+        title: "Error Occured",
+        content: e.message,
+        severity: "error",
+      });
+      setLoading(false);
+    }
+  };
 
   return (
     <div>
@@ -76,8 +156,29 @@ export default function AddNewMember() {
             boxShadow: 0,
             padding: "1em",
             borderRadius: "16px",
+            width: "300px",
           }}
         >
+          {feedback.display && (
+            <Alert
+              sx={{ marginBottom: "20px" }}
+              severity={feedback.severity}
+              action={
+                <Button
+                  variant="outlined"
+                  onClick={() => setFeedback(defaultstate)}
+                  sx={{ textTransform: "capitalize" }}
+                  color="inherit"
+                  size="small"
+                >
+                  Clear
+                </Button>
+              }
+            >
+              <AlertTitle>{feedback.title}</AlertTitle>
+              {feedback.content}
+            </Alert>
+          )}
           <Typography variant="h6">Invite to Board</Typography>
           <Typography
             sx={{ color: "#828282", marginBottom: "10px" }}
@@ -108,8 +209,8 @@ export default function AddNewMember() {
                 })}
               </Stack>
             )}
-            {users.users &&
-              users.users.map((user: User) => {
+            {users.queriedUser && users.queriedUser.length > 0 ? (
+              users.queriedUser.map((user: User) => {
                 return (
                   <motion.div
                     key={user.id}
@@ -119,7 +220,9 @@ export default function AddNewMember() {
                     }}
                   >
                     <Box
-                      onClick={() => setClick(user.id)}
+                      onClick={() => {
+                        setClick(user.id);
+                      }}
                       sx={{
                         margin: "10px 0",
                         display: "flex",
@@ -151,12 +254,20 @@ export default function AddNewMember() {
                     </Box>
                   </motion.div>
                 );
-              })}
+              })
+            ) : (
+              <Alert severity="error">
+                No user found with the keyword {nameQuery}
+              </Alert>
+            )}
           </Box>
           <Box sx={{ textAlign: "center" }}>
             <LoadingButton
+              disabled={click === ""}
               variant="contained"
               size="large"
+              onClick={addBoardMember}
+              loading={loading ? true : false}
               loadingPosition="start"
               startIcon={<AddBoxIcon />}
               sx={{
