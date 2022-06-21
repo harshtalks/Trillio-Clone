@@ -61,6 +61,8 @@ const Boards: NextPage = (props: any) => {
               {error}
             </Alert>
           ) : (
+            boards &&
+            boards.length > 0 &&
             boards.map((board: BoardProps) => {
               return (
                 <Grid key={board.id} item>
