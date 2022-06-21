@@ -19,6 +19,7 @@ import { LoadingButton } from "@mui/lab";
 import Fetcher from "../../lib/fetcher";
 import { useRouter } from "next/router";
 import SuccessFeedback from "./SuccessFeedback";
+import { addList } from "../../store/boardScreenReducer";
 
 const style = {
   position: "absolute" as "absolute",

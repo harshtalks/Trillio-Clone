@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Alert, AlertTitle, Grid, Typography } from "@mui/material";
 import type { GetServerSideProps, NextPage } from "next";
 import { getSession } from "next-auth/react";
@@ -13,16 +14,16 @@ import List from "../../components/homepageComps/List";
 import AddNewCard from "../../components/addNewCard";
 
 const Home: NextPage = (props: any) => {
-  const boardData: BoardProps | null = props.boardData;
+  const data: BoardProps | null = props.boardData;
   const error: string | null = props.error;
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (boardData) {
-      dispatch(storeBoard(boardData));
-    }
-  }, []);
+  if (data) {
+    dispatch(storeBoard(data));
+  }
+
+  const boardData = useAppSelector((state) => state.boardSceen);
 
   const detailsCardModel = useAppSelector((state) => state.ui.cardDetailsModel);
 
@@ -40,7 +41,7 @@ const Home: NextPage = (props: any) => {
           {boardData.lists.map((list) => {
             return (
               <Grid key={list.id} item>
-                <List show={true} listId={list.id} list={list} />
+                <List show={true} listId={list.id} />
               </Grid>
             );
           })}

@@ -17,21 +17,14 @@ import {
   List as ListProps,
   MemberCard,
 } from "@prisma/client";
+import { listProps } from "../../types/types";
 
-type listprops = ListProps & {
-  card: Array<CardProps & { labels: Array<Label>; members: MemberCard }>;
-};
-
-const List = ({
-  show,
-  listId,
-  list,
-}: {
-  show: boolean;
-  listId?: string;
-  list?: listprops;
-}) => {
+const List = ({ show, listId }: { show: boolean; listId?: string }) => {
   const dispatch = useAppDispatch();
+
+  const list = useAppSelector((state) =>
+    state.boardSceen.lists.find((list) => list.id === listId)
+  );
 
   return (
     <Box sx={{ width: "300px" }}>

@@ -15,6 +15,7 @@ interface InitialState {
   deleteCommentSnackBar: boolean;
   editBoardDescription: boolean;
   editCardDescription: boolean;
+  cardCover: boolean;
 }
 
 const initialState = {
@@ -81,6 +82,9 @@ const uiSlice = createSlice({
     toggleCardDescription(state) {
       state.editCardDescription = !state.editCardDescription;
     },
+    changeCardCover(state, action) {
+      state.cardCover = action.payload;
+    },
   },
 });
 
@@ -100,6 +104,7 @@ export const {
   toggleDeleteCommentSnackbar,
   toggleBoardDescription,
   toggleCardDescription,
+  changeCardCover,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

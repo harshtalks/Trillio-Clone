@@ -22,6 +22,7 @@ import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import CoverModel from "./CoverModel";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import {
+  changeCardCover,
   toggleCardDescription,
   toggleCoverModel,
   toggleLabelModel,
@@ -32,6 +33,7 @@ import { loadComments } from "../../store/commentsReducer";
 import { LoadingButton } from "@mui/lab";
 import Fetcher from "../../lib/fetcher";
 import { loadCardData } from "../../store/cardScreenReducer";
+import ChangeCoverModel from "./ChangeCoverModel";
 
 interface feedbackType {
   display: boolean;
@@ -285,7 +287,7 @@ const DetailsSection = ({ data }: { data: CardProps }) => {
                 color: "#828282",
               }}
               label="Cover"
-              onClick={() => dispatch(toggleCoverModel())}
+              onClick={() => dispatch(changeCardCover(true))}
             />
             <Chip
               icon={<LabelIcon fontSize="small" />}
@@ -302,6 +304,7 @@ const DetailsSection = ({ data }: { data: CardProps }) => {
         </Grid>
       </Grid>
       <LabelModel />
+      <ChangeCoverModel cardId={data.id} />
     </Box>
   );
 };

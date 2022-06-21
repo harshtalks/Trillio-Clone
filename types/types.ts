@@ -41,3 +41,7 @@ export type CardProps = Card & {
   members: memberCardType;
   comments: Array<Comment & { user: User }>;
 };
+
+export type listProps = List & {
+  card: Array<Card & { labels: Array<Label>; members: memberCardType }>;
+};
