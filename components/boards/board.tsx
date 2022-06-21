@@ -1,6 +1,6 @@
 import { Avatar, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { Member, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/router";
