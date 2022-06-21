@@ -32,6 +32,9 @@ const boardScreenSlice = createSlice({
         return list;
       });
     },
+    changeDescription(state, action) {
+      state.description = action.payload;
+    },
   },
 });
 
@@ -41,6 +44,7 @@ export const {
   addMember,
   addList,
   addCard,
+  changeDescription,
 } = boardScreenSlice.actions;
 
 export default boardScreenSlice.reducer;

@@ -13,6 +13,8 @@ interface InitialState {
   addNewList: boolean;
   currentList: string;
   deleteCommentSnackBar: boolean;
+  editBoardDescription: boolean;
+  editCardDescription: boolean;
 }
 
 const initialState = {
@@ -26,6 +28,8 @@ const initialState = {
   addNewCard: false,
   addNewList: false,
   deleteCommentSnackBar: false,
+  editBoardDescription: false,
+  editCardDescription: false,
 } as InitialState;
 
 const uiSlice = createSlice({
@@ -71,6 +75,12 @@ const uiSlice = createSlice({
     toggleDeleteCommentSnackbar(state) {
       state.deleteCommentSnackBar = !state.deleteCommentSnackBar;
     },
+    toggleBoardDescription(state) {
+      state.editBoardDescription = !state.editBoardDescription;
+    },
+    toggleCardDescription(state) {
+      state.editCardDescription = !state.editCardDescription;
+    },
   },
 });
 
@@ -88,6 +98,8 @@ export const {
   saveListId,
   setCurrentList,
   toggleDeleteCommentSnackbar,
+  toggleBoardDescription,
+  toggleCardDescription,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

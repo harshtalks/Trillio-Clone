@@ -1,9 +1,11 @@
 import {
   Alert,
+  AlertTitle,
   Box,
   Chip,
   CircularProgress,
   Grid,
+  TextField,
   Typography,
 } from "@mui/material";
 import React, { useEffect } from "react";
@@ -19,22 +21,93 @@ import Comments from "./Comments";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import CoverModel from "./CoverModel";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { toggleCoverModel, toggleLabelModel } from "../../store/UIReducer";
+import {
+  toggleCardDescription,
+  toggleCoverModel,
+  toggleLabelModel,
+} from "../../store/UIReducer";
 import LabelModel from "./LabelModel";
 import { CardProps } from "../../types/types";
 import { loadComments } from "../../store/commentsReducer";
+import { LoadingButton } from "@mui/lab";
+import Fetcher from "../../lib/fetcher";
+import { loadCardData } from "../../store/cardScreenReducer";
+
+interface feedbackType {
+  display: boolean;
+  content: string;
+  title: string;
+  severity: "success" | "warning" | "error" | "info";
+}
+
+const defaultstate: feedbackType = {
+  display: false,
+  content: "",
+  severity: "info",
+  title: "",
+};
 
 const DetailsSection = ({ data }: { data: CardProps }) => {
   const dispatch = useAppDispatch();
   const listName = useAppSelector((state) => state.ui.currentList);
+  const editCardDescription = useAppSelector(
+    (state) => state.ui.editCardDescription
+  );
+
+  const [description, setDescription] = React.useState("");
+
+  //display hooks
+  const [feedback, setFeedback] = React.useState(defaultstate as feedbackType);
+  const [loading, setLoading] = React.useState(false);
+
   const {
     data: comments,
     error,
     status,
   } = useAppSelector((state) => state.comments);
 
+  const handlerChangeDescription = async () => {
+    setLoading(true);
+    if (data.description === description) {
+      setFeedback({
+        display: true,
+        content: "There is no change in the description.",
+        severity: "warning",
+        title: "No changes made",
+      });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const result = await Fetcher("/changeDescriptionCard", {
+        cardId: data.id,
+        description,
+      });
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+      setLoading(false);
+      dispatch(toggleCardDescription());
+      dispatch(loadCardData(data.id));
+    } catch (error: any) {
+      console.error(error);
+      setFeedback({
+        display: true,
+        title: "Error",
+        content: error.message,
+        severity: "error",
+      });
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     dispatch(loadComments(data.id));
+    if (data.description) {
+      setDescription(data.description);
+    }
   }, []);
 
   return (
@@ -68,6 +141,7 @@ const DetailsSection = ({ data }: { data: CardProps }) => {
             </Typography>
             <Chip
               label="Edit"
+              onClick={() => dispatch(toggleCardDescription())}
               icon={<EditIcon fontSize="small" />}
               sx={{
                 padding: "10px 15px",
@@ -79,7 +153,45 @@ const DetailsSection = ({ data }: { data: CardProps }) => {
             />
           </Box>
           <Box sx={{ marginBottom: "30px" }}>
-            <Typography>{data.description}</Typography>
+            {editCardDescription ? (
+              <Box>
+                {feedback.display && (
+                  <Alert
+                    variant="outlined"
+                    severity={feedback.severity}
+                    sx={{ my: 2 }}
+                  >
+                    <AlertTitle>{feedback.title}</AlertTitle>
+                    {feedback.content}
+                  </Alert>
+                )}
+                <TextField
+                  label="Enter Description"
+                  multiline
+                  fullWidth
+                  rows="10"
+                  defaultValue="Default Value"
+                  variant="outlined"
+                  value={description}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                    setFeedback(defaultstate);
+                  }}
+                />
+                <LoadingButton
+                  loading={loading ? true : false}
+                  onClick={handlerChangeDescription}
+                  size="large"
+                  color="success"
+                  variant="outlined"
+                  sx={{ display: "block", marginTop: "10px" }}
+                >
+                  Save
+                </LoadingButton>
+              </Box>
+            ) : (
+              <Typography>{data.description}</Typography>
+            )}
           </Box>
           <Box
             sx={{

@@ -1,7 +1,17 @@
-import { Chip, Divider, Typography } from "@mui/material";
+/* eslint-disable react-hooks/exhaustive-deps */
+import {
+  Alert,
+  AlertTitle,
+  Button,
+  Chip,
+  Divider,
+  Input,
+  TextField,
+  Typography,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Avatar from "@mui/material/Avatar";
@@ -9,15 +19,82 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import EditIcon from "@mui/icons-material/Edit";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { toggleSideMenu } from "../../store/UIReducer";
+import { toggleBoardDescription, toggleSideMenu } from "../../store/UIReducer";
 import { format } from "date-fns";
+import { LoadingButton } from "@mui/lab";
+import Fetcher from "../../lib/fetcher";
+import { changeDescription } from "../../store/boardScreenReducer";
+
+interface feedbackType {
+  display: boolean;
+  content: string;
+  title: string;
+  severity: "success" | "warning" | "error" | "info";
+}
+
+const defaultstate: feedbackType = {
+  display: false,
+  content: "",
+  severity: "info",
+  title: "",
+};
 
 const Menu = () => {
   const dispatch = useAppDispatch();
+  const [description, setDescription] = React.useState("");
+
+  //display hooks
+  const [feedback, setFeedback] = React.useState(defaultstate as feedbackType);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState(false);
   //
   const open = useAppSelector((state) => state.ui.sideMenu);
   //
   const boardScreen = useAppSelector((state) => state.boardSceen);
+  const editBoardDescription = useAppSelector(
+    (state) => state.ui.editBoardDescription
+  );
+
+  const handlerChangeDescription = async () => {
+    setLoading(true);
+    if (boardScreen.description === description) {
+      setFeedback({
+        display: true,
+        content: "There is no change in the description.",
+        severity: "warning",
+        title: "No changes made",
+      });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const result = await Fetcher("/changeDescriptionBoard", {
+        boardId: boardScreen.id,
+        description,
+      });
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+      setLoading(false);
+      dispatch(toggleBoardDescription());
+      dispatch(changeDescription(description));
+    } catch (error: any) {
+      console.error(error);
+      setFeedback({
+        display: true,
+        title: "Error",
+        content: error.message,
+        severity: "error",
+      });
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (boardScreen.description) setDescription(boardScreen.description);
+  }, []);
 
   const date = format(new Date(boardScreen.createdAt), "dd LLLL yyyy");
   //
@@ -112,6 +189,7 @@ const Menu = () => {
           Description
         </Typography>
         <Chip
+          onClick={() => dispatch(toggleBoardDescription())}
           label="Edit"
           icon={<EditIcon />}
           sx={{
@@ -124,7 +202,45 @@ const Menu = () => {
         />
       </Box>
       <Box sx={{ marginBottom: "30px" }}>
-        <Typography>{boardScreen.description}</Typography>
+        {editBoardDescription ? (
+          <Box>
+            {feedback.display && (
+              <Alert
+                variant="outlined"
+                severity={feedback.severity}
+                sx={{ my: 2 }}
+              >
+                <AlertTitle>{feedback.title}</AlertTitle>
+                {feedback.content}
+              </Alert>
+            )}
+            <TextField
+              label="Enter Description"
+              multiline
+              fullWidth
+              rows="10"
+              defaultValue="Default Value"
+              variant="outlined"
+              value={description}
+              onChange={(e) => {
+                setDescription(e.target.value);
+                setFeedback(defaultstate);
+              }}
+            />
+            <LoadingButton
+              loading={loading ? true : false}
+              onClick={handlerChangeDescription}
+              size="large"
+              color="success"
+              variant="outlined"
+              sx={{ display: "block", marginTop: "10px" }}
+            >
+              Save
+            </LoadingButton>
+          </Box>
+        ) : (
+          <Typography>{boardScreen.description}</Typography>
+        )}
       </Box>
       <Box
         sx={{
