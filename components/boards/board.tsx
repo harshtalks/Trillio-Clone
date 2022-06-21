@@ -1,6 +1,6 @@
 import { Avatar, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { User } from "@prisma/client";
+import { MemberBoard, User } from "@prisma/client";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -63,7 +63,7 @@ const Board = ({ board }: { board: BoardProps }) => {
           spacing={1}
         >
           {board.members.length > 3 &&
-            board.members.map((member: Member & { user: User }) => {
+            board.members.map((member: MemberBoard & { user: User }) => {
               return (
                 <Avatar
                   key={member.id}
