@@ -125,27 +125,27 @@ const Login: NextPage = () => {
                 marginLeft: "auto",
                 marginRight: "auto",
                 textAlign: "center",
-                padding: "3rem",
+                padding: small ? "2rem 1rem" : "3rem",
               }}
             >
               <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                <Chip
-                  sx={{
-                    borderRadius: "8px",
-                    padding: "1.5rem",
-                    fontWeight: "500",
-                    fontSize: "1rem",
-                    background: "#1C3041",
-                    color: "white",
-                  }}
+                <Button
                   onClick={() => {
                     signIn("github", {
                       callbackUrl: `${window.location.origin}/`,
                     });
                   }}
-                  icon={<GitHubIcon sx={{ fill: "white" }} />}
-                  label="Signin using Github"
-                />
+                  startIcon={<GitHubIcon />}
+                  sx={{
+                    borderRadius: "8px",
+                    fontWeight: "500",
+                    fontSize: "1rem",
+                  }}
+                  variant="outlined"
+                  color="success"
+                >
+                  Signin Using Github
+                </Button>
               </motion.div>
               <Box
                 sx={{

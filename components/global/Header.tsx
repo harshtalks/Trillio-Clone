@@ -6,10 +6,12 @@ import Profile from "../smallerComps/Profile";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useAppSelector } from "../../hooks/redux";
+import useMediaPoints from "../../hooks/useMediaPoints";
 
 const Header = ({ isBoardPage = false }: { isBoardPage: boolean }) => {
   const router = useRouter();
   const boardData = useAppSelector((state) => state.boardSceen);
+  const { small } = useMediaPoints();
   return (
     <Box
       sx={{
@@ -18,8 +20,10 @@ const Header = ({ isBoardPage = false }: { isBoardPage: boolean }) => {
         display: "flex",
         alignItems: "center",
         width: "100%",
-        justifyContent: "space-between",
+        justifyContent: small ? "center" : "space-between",
         boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+        flexDirection: small ? "column-reverse" : "row",
+        gap: small ? "1rem" : "0",
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
@@ -63,7 +67,8 @@ const Header = ({ isBoardPage = false }: { isBoardPage: boolean }) => {
         sx={{
           display: "flex",
           alignItems: "center",
-          gap: "2rem",
+          gap: small ? "10px" : "2rem",
+          flexDirection: small ? "column-reverse" : "row",
         }}
       >
         <SearchBar />
